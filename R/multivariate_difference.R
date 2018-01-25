@@ -8,7 +8,7 @@
 #' @param treatment.var the name of the treatment column
 #' 
 #' @importFrom vegan vegdist betadisper
-#' 
+#' @export
 multivariate_difference <- function(df, time.var=NULL, species.var, abundance.var, replicate.var, treatment.var){
   
   if(is.null(time.var)){
