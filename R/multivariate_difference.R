@@ -6,6 +6,7 @@
 #' @param abundance.var The name of the abundance column 
 #' @param replicate.var The name of the replicate column 
 #' @param treatment.var the name of the treatment column
+#' @export
 #' 
 multivariate_difference <- function(df, time.var=NULL, species.var, abundance.var, replicate.var, treatment.var){
   
