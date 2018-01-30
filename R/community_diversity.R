@@ -24,85 +24,53 @@
 #' community_diversity(subset(pplots, plot==25|plot==6), 
 #'                     time.var="year", 
 #'                     replicate.var = "plot", 
-#'                     abundance.var = "relative_cover")# For Shannon's diversity metric
+#'                     abundance.var = "relative_cover") # for Shannon's diversity metric
 #'
 #' community_diversity(subset(pplots, plot==25|plot==6), 
 #'                     time.var="year", 
 #'                     replicate.var = "plot", 
 #'                     abundance.var = "relative_cover", 
-#'                     metric = "Simpson") #For Simpson's diversity metric
+#'                     metric = "Simpson") # for Simpson's diversity metric
 #'
 #' #Example with no replicates
 #' community_diversity(subset(pplots, plot==25), 
 #'                     time.var="year", 
-#'                     abundance.var = "relative_cover")#for Shannon's diversity metric
+#'                     abundance.var = "relative_cover") # for Shannon's diversity metric
 #'
 #' #Example with only a single time point
 #' community_diversity(subset(pplots, year==2002&plot==25|year==2002&plot==6), 
 #'                     replicate.var = "plot", 
-#'                     abundance.var = "relative_cover")# For Shannon's diversity metric
+#'                     abundance.var = "relative_cover") # for Shannon's diversity metric
 #'
 #'
-
 #' @export
 #'
 community_diversity <- function(df,  time.var = NULL, 
                                 abundance.var, 
                                 replicate.var = NULL,  
-                                diversity = "Shannon") {
+                                metric = c("Shannon", "Simpson")) {
+  
+  # verify metric choice
+  metric <- match.arg(metric)
   
   if(is.null(replicate.var)) {
-    
     myformula <- as.formula(paste(abundance.var, "~", time.var))
-    
-    if(diversity == "Shannon") {
-      
-      comdiv <- aggregate(myformula, data = df, FUN = function(x) diversity = Shannon(x))
-      names(comdiv)[2] <- "Shannon"
-      
-    } else {
-      
-      comdiv <- aggregate(myformula, data=df, FUN = function(x) diversity = Simpson(x))
-      names(comdiv)[2] <- "Simpson"
-      
-      }
+  } else if(is.null(time.var)) {
+    myformula <- as.formula(paste(abundance.var, "~", replicate.var))
   } else {
-    
-    if(is.null(time.var)) {
-      
-      myformula <- as.formula(paste(abundance.var, "~", replicate.var))
-      
-      if(diversity == "Shannon"){
-        
-        comdiv <- aggregate(myformula, data = df, FUN = function(x) diversity = Shannon(x))
-        names(comdiv)[2] <- "Shannon"
-        
-      } else {
-        
-        comdiv <- aggregate(myformula, data=df, FUN = function(x) diversity = Simpson(x))
-        names(comdiv)[2] <- "Simpson"
-        
-      }
-      
-    } else {
-      
     myformula <- as.formula(paste(abundance.var, "~", time.var, "+", replicate.var))
-    
-    if(diversity == "Shannon") {
-      comdiv <- aggregate(myformula, data = df, FUN = function(x) diversity = Shannon(x))
-      names(comdiv)[3] <- "Shannon"
-      
-    } else {
-      
-      comdiv <- aggregate(myformula, data = df, FUN = function(x) diversity = Simpson(x))
-      names(comdiv)[3] <- "Simpson"
-    }
-    }
   }
+  
+  if(metric == "Shannon") {
+      comdiv <- aggregate(myformula, data = df, FUN = function(x) diversity = Shannon(x))
+  } else if(metric == "Simpson") {
+      comdiv <- aggregate(myformula, data = df, FUN = function(x) diversity = Simpson(x))
+  }
+  
+  names(comdiv)[names(comdiv) == abundance.var] <- metric
+  
   return(comdiv)
 }
-
-
 
 ############################################################################
 #
