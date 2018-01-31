@@ -49,7 +49,7 @@
 community_structure <- function(df,  time.var = NULL, 
                                 abundance.var, 
                                 replicate.var = NULL, 
-                                metric = c("EQ", "SimpsonEvenness")) {
+                                metric = c("EQ", "SimpsonEvenness","Evar")) {
                                   
   # verify metric choice
   metric <- match.arg(metric)
@@ -72,7 +72,12 @@ community_structure <- function(df,  time.var = NULL,
       data.frame,
       aggregate(myformula, data = df,
                 FUN = function(x) c(SpR = S(x), evenness = SimpEven(x))))
-  } 
+  } else if(metric == "Evar"){
+    comstruct <- do.call(
+      data.frame,
+      aggregate(myformula, data = df,
+                FUN = function(x) c(SpR = S(x), evenness = Evar(x))))
+  }
 
   idx <- which(names(comstruct) == paste(abundance.var, 'SpR', sep = '.'))
   names(comstruct)[idx] <- "richness"
@@ -91,7 +96,7 @@ community_structure <- function(df,  time.var = NULL,
 #
 ############################################################################
 
-#'  A function to calculate E1/D (inverse of Simpson's) from Smith and Wilson 1996
+#'  A function to calculate E1/D (inverse of Simpson's Evenness) from Smith and Wilson 1996
 #' @param S the number of species in the sample
 #' @param x the vector of abundances of each species
 #' @param N the total abundance
@@ -100,3 +105,13 @@ SimpEven <- function(x, S = length(x[x != 0 & !is.na(x)]), N = sum(x[x != 0 & !i
   D <- sum(p2)
   (1/D)/S
 }
+
+#' A function to calculate Evar from Smith and Wilson 1996
+#' @param S the number of species in the sample
+#' @param x the vector of abundances of each species
+
+Evar <- function(x, S = length(x)) {
+lnx <- log(x)
+theta <- (S - 1) / S * var(lnx)
+return(1 - 2 / pi * atan(theta))
+} 
