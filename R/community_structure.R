@@ -32,12 +32,13 @@
 #'                     time.var="year", 
 #'                     replicate.var = "plot", 
 #'                     abundance.var = "relative_cover", 
-#'                     metric = "SimpEven") # for Simpson's evenness metric
+#'                     metric = "SimpsonEvenness") # for Simpson's evenness metric
 #'
 #' #Example with no replicates
 #' community_structure(subset(pplots, plot==25), 
 #'                     time.var="year", 
-#'                     abundance.var = "relative_cover") # for EQ evenness metric
+#'                     abundance.var = "relative_cover",
+#'                     metric = "Evar) # for Evar evenness metric
 #'
 #' #Example with only a single time point
 #' community_structure(subset(pplots, year==2002&plot==25|year==2002&plot==6), 
