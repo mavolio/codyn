@@ -112,7 +112,8 @@ SimpEven <- function(x, S = length(x[x != 0 & !is.na(x)]), N = sum(x[x != 0 & !i
 #' @param x the vector of abundances of each species
 
 Evar <- function(x, S = length(x)) {
-lnx <- log(x)
-theta <- (S - 1) / S * var(lnx)
-return(1 - 2 / pi * atan(theta))
+  x1 <- x[x!=0 & !is.na(x)]
+  lnx <- log(x1)
+  theta <- (S - 1) / S * var(lnx)
+  return(1 - 2 / pi * atan(theta))
 } 
