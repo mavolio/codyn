@@ -37,7 +37,8 @@
 #' #Example with no replicates
 #' community_structure(subset(pplots, plot==25), 
 #'                     time.var="year", 
-#'                     abundance.var = "relative_cover") # for EQ evenness metric
+#'                     abundance.var = "relative_cover",
+#'                     metric = "Evar) # for Evar evenness metric
 #'
 #' #Example with only a single time point
 #' community_structure(subset(pplots, year==2002&plot==25|year==2002&plot==6), 
@@ -45,11 +46,10 @@
 #'                     abundance.var = "relative_cover")# For EQ evenness metric
 #'
 #' @export
-
 community_structure <- function(df,  time.var = NULL, 
                                 abundance.var, 
                                 replicate.var = NULL, 
-                                metric = c("EQ", "SimpsonEvenness")) {
+                                metric = c("EQ", "SimpsonEvenness", "Evar")) {
                                   
   # verify metric choice
   metric <- match.arg(metric)
@@ -73,7 +73,6 @@ community_structure <- function(df,  time.var = NULL,
   return(comstruct)
 }
 
-
 ############################################################################
 #
 # Private functions: these are internal functions not intended for reuse.
@@ -91,3 +90,13 @@ SimpsonEvenness <- function(x, S = length(x[x != 0 & !is.na(x)]), N = sum(x[x !=
   D <- sum(p2)
   (1/D)/S
 }
+
+# A function to calculate Evar from Smith and Wilson 1996
+# @param S the number of species in the sample
+# @param x the vector of abundances of each species
+Evar <- function(x, S = length(x)) {
+  x1 <- x[x!=0 & !is.na(x)]
+  lnx <- log(x1)
+  theta <- (S - 1) / S * var(lnx)
+  return(1 - 2 / pi * atan(theta))
+} 
