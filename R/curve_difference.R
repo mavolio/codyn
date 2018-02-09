@@ -1,6 +1,6 @@
 #' @title Curve Differences
-#' @description Calculates the difference between two rank abundance curves. There are three ways differences can be calcualted. 1) Between all treamtents within a block. Here, block.var and treatment.var need to be specified. 2) Between all treatments by taking the average species abundance of all species across all replicates within a treatment to create a single species pool. Here pool = TRUE, treatment.var needs to be specified, and block.var will be NULL. 3) Between all replicates. Here block.var = NULL, pool = FALSE and specifying treatment.var is optional. If treatment.var is specified, in the output the treatment that each replicate belongs to will also be listed.
-#' @param df A data frame containing a species, abundance, and replicate columns and optional optional time, treatment, and block columns
+#' @description Calculates the difference between two rank abundance curves. There are three ways differences can be calculated. 1) Between all treatments within a block. Here, block.var and treatment.var need to be specified. 2) Between all treatments by taking the average species abundance of all species across all replicates within a treatment to create a single species pool. Here pool = TRUE, treatment.var needs to be specified, and block.var will be NULL. 3) Between all replicates. Here block.var = NULL, pool = FALSE and specifying treatment.var is optional. If treatment.var is specified, in the output the treatment that each replicate belongs to will also be listed.
+#' @param df A data frame containing a species, abundance, and replicate columns and optional time, treatment, and block columns
 #' @param time.var The name of the optional time column 
 #' @param species.var The name of the species column 
 #' @param abundance.var The name of the abundance column 
@@ -22,61 +22,69 @@
 #' }
 #' @references Avolio et al. OUR PAPER.
 #' @examples 
-#' data(pplots) 
-#' # With block and no time 
-#' curve_difference(df = subset(pplots, year == 2002&block<3), 
-#'                      species.var = "species", 
-#'                      abundance.var = "relative_cover", 
-#'                      treatment.var = 'treatment', 
-#'                      block.var = "block", 
-#'                      replicate.var = "plot")
-#' # With blocks and time 
-#' curve_difference(df = subset(pplots, year < 2004&block<3), 
-#'                      species.var = "species", 
-#'                      abundance.var = "relative_cover", 
-#'                      treatment.var = 'treatment', 
-#'                      block.var = "block", 
-#'                      replicate.var = "plot",
-#'                      time.var = "year")
-#' #pooling by treatment no time
-#' curve_difference(df = subset(pplots, time == 2002), 
-#'                      species.var = "species", 
-#'                      abundance.var = "abundance", 
-#'                      treatment.var = 'treatment', 
-#'                      pool="YES", 
-#'                      replicate.var = "replicate")
-#  #pooling by treatment with time
-#' curve_difference(df = subset(pplots, time < 2004), 
-#'                      species.var = "species", 
-#'                      abundance.var = "abundance", 
-#'                      treatment.var = 'treatment', 
-#'                      pool="YES", 
-#'                      replicate.var = "replicate")
-#' #All pairwise replicates with treatment and no time
-#' curve_difference(df=subset(pplots, year==2002&plot==25|year==2002&plot==6), 
-#'                      species.var = "species",
-#'                      abundance.var = "relative_cover", 
-#'                      replicate.var = "plot",
-#'                      treatment.var = "treatment")
-#' #All pairwise replicates with treatment
-#' curve_difference(df=subset(pplots, year<2004&plot==25|year < 2004&plot==6), 
-#'                      species.var = "species", 
-#'                      abundance.var = "relative_cover", 
-#'                      replicate.var = "plot", 
-#'                      time.var="year",
-#'                      treatment.var = "treatment")
-#' #All pairwise replicates without treatment and no time
-#' curve_difference(df=subset(pplots, year==2002&plot==25|year==2002&plot==6), 
-#'                      species.var = "species",
-#'                      abundance.var = "relative_cover", 
-#'                      replicate.var = "plot")
-#' #All pairwise replicates without treatment
-#' curve_difference(df=subset(pplots, year<2004&plot==25|year < 2004&plot==6), 
-#'                      species.var = "species", 
-#'                      abundance.var = "relative_cover", 
-#'                      replicate.var = "plot", 
-#'                      time.var="year")
-
+#' data(pplots)
+#' # With block and no time
+#' df <- subset(pplots, year == 2002 & block < 3)
+#' curve_difference(df = df,
+#'                  species.var = "species",
+#'                  abundance.var = "relative_cover",
+#'                  treatment.var = 'treatment',
+#'                  block.var = "block",
+#'                  replicate.var = "plot")
+#' # With blocks and time
+#' df <- subset(pplots, year < 2004 & block < 3)
+#' curve_difference(df = df,
+#'                  species.var = "species",
+#'                  abundance.var = "relative_cover",
+#'                  treatment.var = 'treatment',
+#'                  block.var = "block",
+#'                  replicate.var = "plot",
+#'                  time.var = "year")
+#' # Pooling by treatment no time
+#' df <- subset(pplots, year == 2002)
+#' curve_difference(df = df,
+#'                  species.var = "species",
+#'                  abundance.var = "relative_cover",
+#'                  treatment.var = 'treatment',
+#'                  pool = "YES",
+#'                  replicate.var = "plot")
+#' # Pooling by treatment with time
+#' df <- subset(pplots, year < 2004)
+#' curve_difference(df = df,
+#'                  species.var = "species",
+#'                  abundance.var = "relative_cover",
+#'                  treatment.var = 'treatment',
+#'                  pool = "YES",
+#'                  replicate.var = "plot",
+#'                  time.var = "year")
+#' # All pairwise replicates with treatment and no time
+#' df <- subset(pplots, year == 2002 & plot %in% c(6, 25, 32))
+#' curve_difference(df = df,
+#'                  species.var = "species",
+#'                  abundance.var = "relative_cover",
+#'                  replicate.var = "plot",
+#'                  treatment.var = "treatment")
+#' # All pairwise replicates with treatment
+#' df <- subset(pplots, year < 2004 & plot %in% c(6, 25, 32))
+#' curve_difference(df = df,
+#'                  species.var = "species",
+#'                  abundance.var = "relative_cover",
+#'                  replicate.var = "plot",
+#'                  time.var = "year",
+#'                  treatment.var = "treatment")
+#' # All pairwise replicates without treatment and no time
+#' df <- subset(pplots, year == 2002 & plot %in% c(6, 25, 32))
+#' curve_difference(df = df,
+#'                  species.var = "species",
+#'                  abundance.var = "relative_cover",
+#'                  replicate.var = "plot")
+#' # All pairwise replicates without treatment
+#' df <- subset(pplots, year < 2004 & plot %in% c(6, 25, 32))
+#' curve_difference(df = df,
+#'                  species.var = "species",
+#'                  abundance.var = "relative_cover",
+#'                  replicate.var = "plot",
+#'                  time.var = "year")
 #' @export
 #'
 
