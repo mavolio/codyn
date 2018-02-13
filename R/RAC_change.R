@@ -1,6 +1,6 @@
 #' @title Rank Abundance Curve Changes
-#' @description Calculates change of the five aspects of rank abundance curves (richness, evenness, rank, species gains, and species losses) for a replicate between two consequtive time points.
-#' @param df A data frame containing time, species and abundance columns and an optional column of replicates
+#' @description Calculates change of the five aspects of rank abundance curves (richness, evenness, rank, species gains, and species losses) for a replicate between two consecutive time points.
+#' @param df A data frame containing time, species, and abundance columns and an optional column of replicates
 #' @param time.var The name of the time column 
 #' @param species.var The name of the species column 
 #' @param abundance.var The name of the abundance column 
