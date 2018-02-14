@@ -40,7 +40,7 @@
 #'                     time.var="year", 
 #'                     abundance.var = "relative_cover") # for Shannon's diversity metric
 #'                     
-#' Example with no time or replicate
+#' #Example with no time or replicate
 #' df <- subset(pplots, plot == 25 & year == 2002)
 #' community_diversity(df,
 #'                     abundance.var = "relative_cover") # for Shannon's diversity metric

@@ -372,9 +372,9 @@ curve_diff <- function(df, treatment.var, relrank, cumabund) {
 
 } 
   
-# A function calculate the curve difference between two treatments
+# A function calculate the curve difference between two replicates
 # @param df a dataframe
-# @param treatment.var the name of the replicate column
+# @param replicate.var the name of the replicate column
 # @param relrank the name of the relative rank of each species in the sample
 # @param cumabund the name of the cumulative abundance of each species in the sample  
 curve_diff_rep <- function(df, replicate.var, relrank, cumabund) {
