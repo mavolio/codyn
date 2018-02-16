@@ -80,8 +80,7 @@ if(any(is.na(df[[abundance.var]]))) stop("Abundance column contains missing valu
 if (is.null(time.var)){
   # check there unique species x time combinations
   check_single_onerep(df, replicate.var, species.var)
-}
-else {
+} else {
   # check unique species x time x replicate combinations
   check_single(df, time.var, species.var, replicate.var)
 }
@@ -93,14 +92,50 @@ if (!is.null(block.var)) {
   if (reps_exp != reps_obs)
     stop("There is not one replicate per treatment in a block")
   cross.var <- treatment.var
+  rep_trt <- unique(subset(df, select = c(replicate.var, treatment.var, block.var)))
 } else if (pool) {
   cross.var <- treatment.var
 } else {
   cross.var <- replicate.var
 }
 
+# specify aggregate formula from arguments
+
 if (pool) {
-  rankdf <- pool_replicates(df, time.var, species.var, abundance.var, replicate.var, treatment.var)
+  
+  rep_trt<-unique(subset(df, select = c(replicate.var, treatment.var)))
+ 
+  #need to add the casting long step...
+  #NO TIME
+  # apply fill_zeros
+  out <- fill_zeros_rep (df, replicate.var, species.var, abundance.var)
+  allsp <- merge(out, rep_trt, by=replicate.var)
+  
+  #WITH TIME
+  
+  # sort and apply fill_zeros to all time steps
+  df <- df[order(df[[time.var]]),]
+  X <- split(df, df[time.var])
+  out <- lapply(X, FUN = fill_zeros_rep, replicate.var, species.var, abundance.var)
+  ID <- unique(names(out))
+  out <- mapply(function(x, y) "[<-"(x, time.var, value = y) ,
+                out, ID, SIMPLIFY = FALSE)
+  out2 <- do.call("rbind", out)
+  
+  allsp <- merge(out2, rep_trt, by=replicate.var)
+  
+   # specify aggregate formula from arguments
+  if(is.null(time.var)) {
+    by <- c(species.var, treatment.var)
+  } else {
+    by <- c(species.var, treatment.var, time.var)
+  }
+  
+  spave <- aggregate.data.frame(allsp[abundance.var], df[by], FUN = mean)
+  spave <- spave[spave[[abundance.var]] != 0,]
+  
+  relrankdf1<-relrank(spave, species.var, abundance.var, treatment.var, time.var)
+
 } else {
   # rank species in each replicate
   rep_trt <- unique(df[c(replicate.var, treatment.var, block.var)])
@@ -128,7 +163,8 @@ ranktog_split <- split(ranktog,
                        ranktog[splitvars], 
                        sep = "##", drop = TRUE)
 ranktog_split <- lapply(ranktog_split,
-                        FUN = SERSp, "rank", "rank2", abundance.var, paste(abundance.var, 2, sep = ""))
+                        FUN = curve_diff, treatment.var, relrank, cumabund)
+
 unsplit <- lapply(ranktog_split, nrow)
 unsplit <- rep(names(unsplit), unsplit)
 output <- do.call(rbind, c(ranktog_split, list(make.row.names = FALSE)))
