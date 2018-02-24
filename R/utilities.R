@@ -191,14 +191,15 @@ rep_perms <- function(df, replicate.var) {
 #' @param abundance.var The name of the abundance column from df
 #' @return A dataframe with the same columns as df, but with zeros added for species that were present at some point in the time series but not the particular time period.
 #' 
-fill_zeros_rep <- function(df, replicate.var, species.var, abundance.var){
-  df2 <- subset(df, select = c(replicate.var,species.var,abundance.var))
-  if(any(is.na(df2[[species.var]]))) stop("Species names are missing")
-  wide <- reshape(df2, idvar = replicate.var, timevar = species.var, direction = "wide")
-  wide[is.na(wide)] <- 0
-  
-  long<-reshape(wide, idvar = replicate.var, ids = replicate.var, time = names(wide), timevar = abundance.var, direction = "long")
-  colnames(long)[3] <- abundance.var
-  
-  return(long)
+fill_zeros_rep <- function(df, replicate.var, species.var, abundance.var) {
+  ## FIXME replicate.var unnecessary?
+  if(any(is.na(df[[species.var]]))) stop("Species names are missing")
+  full <- merge(
+    unique(df[setdiff(names(df), c(species.var, abundance.var))]),
+    unique(df[species.var])
+  )
+  df <- merge(df, full, all = TRUE)
+  df[is.na(df)] <- 0
+
+  return(df)
 }

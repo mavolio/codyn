@@ -64,12 +64,7 @@ pool_replicates <- function(df, time.var=NULL, species.var, abundance.var, repli
     df <- df[order(df[[time.var]]),]
     X <- split(df, df[time.var])
     out <- lapply(X, FUN = fill_zeros_rep, replicate.var, species.var, abundance.var)
-    ID <- unique(names(out))
-    out <- mapply(function(x, y) "[<-"(x, time.var, value = y) ,
-                  out, ID, SIMPLIFY = FALSE)
-    out2 <- do.call("rbind", out)
-    
-    allsp <- merge(out2, rep_trt, by=replicate.var)
+    allsp <- do.call(rbind, c(out, list(make.row.names = FALSE)))
     
     #get averages of each species by treatment
     myformula <- as.formula(paste(abundance.var, "~", treatment.var, "+", species.var, "+", time.var))

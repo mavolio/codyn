@@ -24,7 +24,7 @@
 #' data(pplots)
 #' # With block and no time
 #' df <- subset(pplots, year == 2002 & block < 3)
-#' curve_difference(df = df,
+#' curve_difference_test(df = df,
 #'                  species.var = "species",
 #'                  abundance.var = "relative_cover",
 #'                  treatment.var = 'treatment',
@@ -32,7 +32,7 @@
 #'                  replicate.var = "plot")
 #' # With blocks and time
 #' df <- subset(pplots, year < 2004 & block < 3)
-#' curve_difference(df = df,
+#' curve_difference_test(df = df,
 #'                  species.var = "species",
 #'                  abundance.var = "relative_cover",
 #'                  treatment.var = 'treatment',
@@ -41,7 +41,7 @@
 #'                  time.var = "year")
 #' # Pooling by treatment no time
 #' df <- subset(pplots, year == 2002)
-#' curve_difference(df = df,
+#' curve_difference_test(df = df,
 #'                  species.var = "species",
 #'                  abundance.var = "relative_cover",
 #'                  treatment.var = 'treatment',
@@ -49,7 +49,7 @@
 #'                  replicate.var = "plot")
 #' # Pooling by treatment with time
 #' df <- subset(pplots, year < 2004)
-#' curve_difference(df = df,
+#' curve_difference_test(df = df,
 #'                  species.var = "species",
 #'                  abundance.var = "relative_cover",
 #'                  treatment.var = 'treatment',
@@ -58,14 +58,14 @@
 #'                  time.var = "year")
 #' # All pairwise replicates with treatment and no time
 #' df <- subset(pplots, year == 2002 & plot %in% c(6, 25, 32))
-#' curve_difference(df = df,
+#' curve_difference_test(df = df,
 #'                  species.var = "species",
 #'                  abundance.var = "relative_cover",
 #'                  replicate.var = "plot",
 #'                  treatment.var = "treatment")
 #' # All pairwise replicates with treatment
 #' df <- subset(pplots, year < 2004 & plot %in% c(6, 25, 32))
-#' curve_difference(df = df,
+#' curve_difference_test(df = df,
 #'                  species.var = "species",
 #'                  abundance.var = "relative_cover",
 #'                  replicate.var = "plot",
@@ -73,13 +73,13 @@
 #'                  treatment.var = "treatment")
 #' # All pairwise replicates without treatment and no time
 #' df <- subset(pplots, year == 2002 & plot %in% c(6, 25, 32))
-#' curve_difference(df = df,
+#' curve_difference_test(df = df,
 #'                  species.var = "species",
 #'                  abundance.var = "relative_cover",
 #'                  replicate.var = "plot")
 #' # All pairwise replicates without treatment
 #' df <- subset(pplots, year < 2004 & plot %in% c(6, 25, 32))
-#' curve_difference(df = df,
+#' curve_difference_test(df = df,
 #'                  species.var = "species",
 #'                  abundance.var = "relative_cover",
 #'                  replicate.var = "plot",
