@@ -135,8 +135,6 @@ abundance_difference <- function(df, time.var = NULL, species.var,
                     merge(rep_trt, rep_trt, by = NULL, suffixes = c('', '2')))
   }
 
-  ## FIXME do not let sub-functions change column types
-
 output_order <- c(
   time.var,
   block.var,

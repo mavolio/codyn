@@ -192,10 +192,10 @@ rep_perms <- function(df, replicate.var) {
 #' @return A dataframe with the same columns as df, but with zeros added for species that were present at some point in the time series but not the particular time period.
 #' 
 fill_zeros_rep <- function(df, replicate.var, species.var, abundance.var) {
-  ## FIXME replicate.var unnecessary?
+  ## FIXME is replicate.var unnecessary?
   if(any(is.na(df[[species.var]]))) stop("Species names are missing")
   full <- merge(
-    unique(df[setdiff(names(df), c(species.var, abundance.var))]),
+    unique(df[setdiff(names(df), c(species.var, abundance.var))]), ##FIXME I don't trust this logic, what vars define unique community
     unique(df[species.var])
   )
   df <- merge(df, full, all = TRUE)

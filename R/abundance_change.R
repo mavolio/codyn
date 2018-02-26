@@ -70,9 +70,8 @@ abundance_change <- function(df, time.var,
     df12 <- df12[order(df12[[time.var]]),]
     X <- split(df12, df12[[time.var]])
     
-    
     out <- lapply(X, FUN = abundchange, time.var, species.var, paste(abundance.var, ".x", sep = ""),paste(abundance.var, ".y", sep = "")) 
-    output <- do.call("rbind", out)  
+    output <- do.call(rbind, c(out, make.row.names = FALSE))  
 
   } else {
     

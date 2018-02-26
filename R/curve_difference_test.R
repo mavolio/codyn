@@ -20,7 +20,8 @@
 #'  \item{block.var: }{A column that has same name and type as the block.var column, if block.var is specified.}
 #' }
 #' @references Avolio et al. OUR PAPER.
-#' @examples 
+#' @examples
+#' \dontrun{
 #' data(pplots)
 #' # With block and no time
 #' df <- subset(pplots, year == 2002 & block < 3)
@@ -84,6 +85,7 @@
 #'                  abundance.var = "relative_cover",
 #'                  replicate.var = "plot",
 #'                  time.var = "year")
+#' }
 #' @export
 #'
 
