@@ -142,12 +142,13 @@ abundance_difference <- function(df, time.var = NULL, species.var,
   ## FIXME reset column types based on df
 
 output_order <- c(
-  species.var,
   time.var,
   block.var,
   replicate.var, paste(replicate.var, 2, sep = ''),
   treatment.var, paste(treatment.var, 2, sep = ''),
+  species.var,
   'difference')
+
 return(output[intersect(output_order, names(output))])
   
 }
