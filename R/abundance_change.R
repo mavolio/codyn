@@ -121,6 +121,13 @@ abundance_change <- function(df, time.var,
     output <- cbind(outnames, output)
     
   }
+  output_order <- c(
+    paste(time.var,pair, sep="_"),
+    replicate.var,
+    species.var,
+    'change')
+  
+  return(output[intersect(output_order, names(output))])
   
   return(output)
 }
