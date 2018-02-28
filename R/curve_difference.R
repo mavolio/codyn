@@ -100,13 +100,14 @@ if (!is.null(block.var)) {
 if (pool) {
   #add zero abundnaces for missing species to get averages
   df <- df[order(df[[time.var]]),]
-  splitvars <- c(time.var)
+  splitvars <- time.var
   X <- split(df, df[splitvars])
-  out <- lapply(X, FUN = fill_zeros_rep, replicate.var, species.var, abundance.var)
+  out <- lapply(X, FUN = fill_zeros_rep, replicate.var, species.var, abundance.var)#stops working here.
   ID <- unique(names(out))
   out <- mapply(function(x, y) "[<-"(x, time.var, value = y) ,
                 out, ID, SIMPLIFY = FALSE)
   out2 <- do.call("rbind", out)
+  ##try to clean this up
   allsp <- merge(out2, rep_trt, by=replicate.var)
   
   # specify aggregate formula from arguments
@@ -131,7 +132,7 @@ if (pool) {
       if(!is.null(block.var)){
         splitvars <- c(time.var, block.var)
         X <- split(df, df[splitvars])
-        out <- lapply(X, FUN = relrank, species.var, abundance.var, replicate.var) # should this be treatmentvar?
+        out <- lapply(X, FUN = relrank, species.var, abundance.var, replicate.var) 
         relrankdf1 <- do.call(rbind, c(out, list(make.row.names = FALSE)))
       } else {
         #for replicate samples
@@ -180,7 +181,7 @@ splitvars <- c(time.var, block.var)
   output <- do.call(rbind, c(out, list(make.row.names = FALSE)))
   output[splitvars] <- do.call(rbind, strsplit(unsplit, '##'))
 
-    if (is.null(block.var)&!is.null(treatment.var)|!pool&!is.null(treatment.var)) {
+    if (is.null(block.var)&!pool&!is.null(treatment.var)) {
       # add treatment for reference
       output <- merge(output, merge(rep_trt, rep_trt, by = NULL, suffixes = c('', '2')))
 }
@@ -212,17 +213,13 @@ splitvars <- c(time.var, block.var)
 # @param replicate.var the name of the replicate column
 # NOTE: when ranks are assigned by treatment and not replicate, treatment is fed into replicate.var
  relrank <- function(df, species.var, abundance.var, replicate.var) {
- replicate.var.type <- typeof(df[[replicate.var]])#this is the problem. sees treatment as an integer when it is a factor.
-   
- df[[replicate.var]]<-as.character(df[[replicate.var]])
+
  relrank <- subset(df, df[[abundance.var]]!=0)
  relrank$rank <- ave(relrank[[abundance.var]], relrank[[replicate.var]], FUN = function(x) rank(-x, ties.method = "average"))
  relrank$maxrank <- ave(relrank$rank, relrank[[replicate.var]], FUN = function(x) max(x))
  relrank$relrank  <- relrank$rank/relrank$maxrank
  relrank <- relrank[order(relrank[[replicate.var]], -relrank[[abundance.var]]),]
  relrank$cumabund <- ave(relrank[[abundance.var]], relrank[[replicate.var]], FUN = function(x) cumsum(x))
- 
- relrank[[replicate.var]] <- as(relrank[[replicate.var]], replicate.var.type)
  
  return(relrank)
  
