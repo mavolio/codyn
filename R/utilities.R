@@ -112,6 +112,7 @@ S <- function(x){
 #' Utility function to calculate EQ evenness from Smith and Wilson 1996
 #' @param x Vector of abundance of each species
 #' If all abundances are equal it returns a 1
+#' @importFrom stats lm
 EQ <- function(x){
   x1 <- x[x != 0]
   if (length(x1) == 1) {
@@ -203,3 +204,37 @@ fill_zeros_rep <- function(df, replicate.var, species.var, abundance.var) {
 
   return(df)
 }
+
+#' @title Add abundance ranks
+#' @description Rank species by abundance, by specified groupig. Species with
+#'   zero abundance receive rank S+1, where S is the total number of species in
+#'   the group.
+#' @param df A data frame containing species, abundance and replicate and/or
+#'   time indications.
+#' @param species.var The name of the species column
+#' @param abundance.var The name of the abundance column
+#' @param replicate.var The name of the optional replicate column
+#' @param time.var The name of the optional time column
+#' 
+#' @return The add_ranks function returns a data frame with the following
+#'   attributes:
+#'   \itemize{
+#'     \item{time.var: }{A column that has the same name and type as the
+#'     time.var column, if time.var is specified.}
+#'     \item{abundance.var: }{A column that has same name and type as the
+#'     abundance.var column.}
+#'     \item{species.var: }{A column that has same name and type as the
+#'     species.var column.}
+#'     \item{replicate.var: }{A column that has same name and type as the
+#'     replicate.var column.}
+#'     \item{rank: }{A numeric column with the species rank; a rank of 1
+#'     indicates the species was most abundant in that time period. All species
+#'     that are not present in that time period have the rank value S+1 where S
+#'     is the number of species in the sample.
+#'     }
+#'   }
+add_ranks <- function(df, species.var, abundance.var,
+                      replicate.var = NULL, time.var = NULL) {
+  
+}
+

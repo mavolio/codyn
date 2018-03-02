@@ -1,5 +1,5 @@
 # @title Add Ranks for Replicates
-#@description Ranks species by abundance in each replicate. For species that are not present at a time point, adds gives the rank S+1, where S is the total number of species in the replicate at that time point.
+# @description Ranks species by abundance in each replicate. For species that are not present at a time point, adds gives the rank S+1, where S is the total number of species in the replicate at that time point.
 # @param df A data frame containing species, abundance and replicate columns and an optional column of time points
 # @param time.var The name of the optional time column 
 # @param species.var The name of the species column 

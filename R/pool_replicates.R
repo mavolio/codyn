@@ -66,6 +66,14 @@ pool_replicates <- function(df, time.var=NULL, species.var, abundance.var,
     by <- c(treatment.var, species.var, time.var)
     spave <- aggregate.data.frame(allsp[abundance.var], allsp[by], FUN = mean)
     
+    
+    ## try this
+    splitvars <- c(treatment.var, time.var)
+    X <- split(spave, spave[splitvars])
+    out <- lapply(X, FUN = add_ranks, species.var, abundance.var, replicate.var, time.var)
+    rankdf <- do.call(rbind, c(out, list(make.row.names = FALSE)))
+    ## end try this
+    
     # add ranks for present species
     rank_pres <- subset(spave, spave[[abundance.var]]!=0)
     rank_pres$trt_time <- paste(rank_pres[[treatment.var]], rank_pres[[time.var]], sep="##")
