@@ -16,16 +16,14 @@
 #' @examples 
 #' data(pplots)
 #' #With treatment
-#' df <- subset(pplots, plot == 6)
-#' multivariate_change(df, 
+#'  multivariate_change(pplots, 
 #'                     time.var="year", 
 #'                     replicate.var = "plot", 
 #'                     treatment.var = "treatment", 
 #'                     species.var = "species", 
 #'                     abundance.var = "relative_cover")
 #' #Without treatment
-#' df <- subset(pplots, plot==6)
-#' multivariate_change(df, 
+#' multivariate_change(pplots, 
 #'                     time.var="year", 
 #'                     replicate.var = "plot", 
 #'                     species.var = "species", 
@@ -46,26 +44,27 @@ multivariate_change <- function(df, time.var, species.var, abundance.var, replic
 
     if(is.null(treatment.var)){
   
-      mult_com_change <- mult_change(df, time.var, species.var, abundance.var, replicate.var)
+      output <- mult_change(df, time.var, species.var, abundance.var, replicate.var)
       
-      }
-  
-  else {
+      } else {
     
   # calculate change for each treatment
-  df[[treatment.var]] <- as.character(df[[treatment.var]])
-  df <- df[order(df[[treatment.var]]),]
-  X <- split(df, df[treatment.var])
+  splitvars <- treatment.var
+  X <- split(df, 
+             df[splitvars])
   out <- lapply(X, FUN = mult_change, time.var, species.var, abundance.var, replicate.var)
-  ID <- unique(names(out))
-  out <- mapply(function(x, y) "[<-"(x, treatment.var, value = y) ,
-                out, ID, SIMPLIFY = FALSE)
-  mult_com_change <- do.call("rbind", out)
-  
-  
-  }
-  
-  return(mult_com_change)
+  unsplit <- lapply(out, nrow)
+  unsplit <- rep(names(unsplit), unsplit)
+  output <- do.call(rbind, c(out, list(make.row.names = FALSE)))
+  output[splitvars] <- do.call(rbind, as.list(unsplit))
+      }
+    
+    output_order <- c(
+      paste(time.var,"pair", sep="_"),
+      treatment.var,
+      'composition_change', 'dispersion_change')
+    
+    return(output[intersect(output_order, names(output))])
 }
 
 ############################################################################

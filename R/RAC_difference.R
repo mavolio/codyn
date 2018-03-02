@@ -54,7 +54,7 @@
 #'                time.var = "year")
 #' 
 #' # All pairwise replicates with treatment
-#' df <- subset(pplots, year < 2004 & plot %in% c(6, 25, 32))
+#' df <- subset(pplots, year < 2004 & plot %in% c(21, 25, 32))
 #' RAC_difference(df = df,
 #'                species.var = "species",
 #'                abundance.var = "relative_cover",
@@ -63,7 +63,7 @@
 #'                treatment.var = "treatment")
 #' 
 #' # All pairwise replicates without treatment
-#' df <- subset(pplots, year < 2004 & plot %in% c(6, 25, 32))
+#' df <- subset(pplots, year < 2004 & plot %in% c(21, 25, 32))
 #' RAC_difference(df = df,
 #'                species.var = "species",
 #'                abundance.var = "relative_cover",
@@ -145,7 +145,14 @@ RAC_difference <- function(df, time.var = NULL, species.var,
   
   ## FIXME reset column types based on df
   
-  return(output)
+  output_order <- c(
+    time.var,
+    block.var,
+    replicate.var, paste(replicate.var, 2, sep = ''),
+    treatment.var, paste(treatment.var, 2, sep = ''),
+    'richness_diff', 'evenness_diff', 'rank_diff', 'species_diff')
+  
+  return(output[intersect(output_order, names(output))])
   
 }
 
@@ -166,8 +173,6 @@ RAC_difference <- function(df, time.var = NULL, species.var,
 SERSp <- function(df, rank.var, rank.var2, abundance.var, abundance.var2){
   
   df <- subset(df, df[[abundance.var]]!=0 | df[[abundance.var2]]!=0)
-  
-  df <- subset(df, !is.na(df[[abundance.var]]) & !is.na(df[[abundance.var2]]))
   
   #ricness and evenness differences
   s_t1 <- S(df[[abundance.var]])
