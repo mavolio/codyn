@@ -105,11 +105,11 @@ if (pool) {
     df <- df[order(df[[time.var]]),]
     splitvars <- time.var
     X <- split(df, df[splitvars])
-    out <- lapply(X, FUN = fill_zeros_rep, replicate.var, species.var, abundance.var)#stops working here.
-    ID <- unique(names(out))
-    out <- mapply(function(x, y) "[<-"(x, time.var, value = y) ,
-                  out, ID, SIMPLIFY = FALSE)
-    out2 <- do.call("rbind", out)
+    out <- lapply(X, FUN = fill_zeros_rep, replicate.var, species.var, abundance.var)
+    unsplit <- lapply(out, nrow)
+    unsplit <- rep(names(unsplit), unsplit)
+    out2 <- do.call(rbind, c(out, list(make.row.names = FALSE)))
+    out2[splitvars] <- do.call(rbind, as.list(unsplit))
   }
 
   allsp <- merge(out2, rep_trt, by=replicate.var)
