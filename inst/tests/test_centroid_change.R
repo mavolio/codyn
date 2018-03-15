@@ -16,7 +16,7 @@ bdat$relative_cover[1] <- NA
 
 #repeat a species
 x <- c("N1P0", 25, 1, 2002, "senecio plattensis", 0.002123142)
-bdat2 <- rbind(dat1, x)
+bdat2 <- rbind(x, dat1)
 
 # run tests -------------------------------------------
 
@@ -33,7 +33,7 @@ test_that("centroid_change function returns correct result", {
   expect_is(myresults1, "data.frame")
   expect_equal(nrow(myresults1), 3)
   expect_equal(ncol(myresults1), 3)##this might need to be changed
-  expect_equal(myresults1$compositon_change[1], 0.1325553, tolerance = 0.00001)
+  expect_equal(myresults1$centroid_distance_change[1], 0.1325553, tolerance = 0.00001)
   expect_equal(myresults1$dispersion_change[1], 0.03804344, tolerance = 0.000001)
 
   #test that it works with treatment
@@ -48,14 +48,14 @@ test_that("centroid_change function returns correct result", {
   
   #test that is doesn't work with missing abundance
   expect_error(centroid_change(bdat, abundance.var = "relative_cover",
-                          replicate.var = "plot",
-                          species.var = "species",
-                          time.var = "year"), "Abundance column contains missing values")
+                               replicate.var = "plot",
+                               species.var = "species",
+                               time.var = "year"), "Abundance column contains missing values")
   
   #test that is doesn't work with a repeated species
   expect_error(centroid_change(bdat2, abundance.var = "relative_cover",
-                          replicate.var = "plot",
-                          species.var = "species",
-                          time.var = "year"), "In replicate 25 there is more than one record for species at the time point 2002")
+                               replicate.var = "plot",
+                               species.var = "species",
+                               time.var = "year"), "In replicate 25 there is more than one record for species at the time point 2002")
 
 })

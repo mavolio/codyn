@@ -1,4 +1,4 @@
-context("RAC_difference")
+context("curve_difference")
 
 
 # prepare data ----------------------------------------
@@ -30,10 +30,10 @@ bdat3$species[1] <- NA
 # run tests -------------------------------------------
 
 
-test_that("RAC_difference function returns correct result", {
+test_that("curve_difference function returns correct result", {
   
   #test the returned result with default setting and no blocking, pooling or time
-  myresults1 <- RAC_difference(dat1, replicate.var = "plot",
+  myresults1 <- curve_difference(dat1, replicate.var = "plot",
                                abundance.var = "relative_cover",
                                species.var = "species")
   
@@ -46,7 +46,7 @@ test_that("RAC_difference function returns correct result", {
   expect_equal(myresults1$species_diff, 0.4230769, tolerance = 0.00001)
 
   #test that it works with time
-  myresults2 <- RAC_difference(pplots, abundance.var = "relative_cover",
+  myresults2 <- curve_difference(pplots, abundance.var = "relative_cover",
                                replicate.var = "plot",
                                species.var = "species",
                                time.var = "year")
@@ -55,7 +55,7 @@ test_that("RAC_difference function returns correct result", {
   expect_equal(ncol(myresults2), 7)
   
   #test that it works with time and treatment specified
-  myresults2.2 <- RAC_difference(pplots, abundance.var = "relative_cover",
+  myresults2.2 <- curve_difference(pplots, abundance.var = "relative_cover",
                                replicate.var = "plot",
                                species.var = "species",
                                time.var = "year",
@@ -65,7 +65,7 @@ test_that("RAC_difference function returns correct result", {
   expect_equal(ncol(myresults2.2), 9)
   
   #test the returned result with blocking and no time
-  myresults3 <- RAC_difference(dat2, replicate.var = "plot",
+  myresults3 <- curve_difference(dat2, replicate.var = "plot",
                                abundance.var = "relative_cover",
                                species.var = "species",
                                block.var = "block",
@@ -80,7 +80,7 @@ test_that("RAC_difference function returns correct result", {
   expect_equal(myresults3$species_diff, 0.3636364, tolerance = 0.00001)
   
   #test that returned results with blocking and time
-  myresults3.2 <- RAC_difference(pplots, replicate.var = "plot",
+  myresults3.2 <- curve_difference(pplots, replicate.var = "plot",
                                abundance.var = "relative_cover",
                                species.var = "species",
                                block.var = "block",
@@ -91,7 +91,7 @@ test_that("RAC_difference function returns correct result", {
   expect_equal(ncol(myresults3.2), 10)
   
   #test the returned result with pooling and no time
-  myresults4 <- RAC_difference(dat3, replicate.var = "plot",
+  myresults4 <- curve_difference(dat3, replicate.var = "plot",
                                abundance.var = "relative_cover",
                                species.var = "species", 
                                pool = TRUE,
@@ -106,7 +106,7 @@ test_that("RAC_difference function returns correct result", {
   expect_equal(myresults4$species_diff, 0.3658537, tolerance = 0.00001)
   
   #test the returned result with pooling and time
-  myresults4.2 <- RAC_difference(pplots, replicate.var = "plot",
+  myresults4.2 <- curve_difference(pplots, replicate.var = "plot",
                                abundance.var = "relative_cover",
                                species.var = "species", 
                                pool = TRUE,
@@ -117,19 +117,19 @@ test_that("RAC_difference function returns correct result", {
   expect_equal(ncol(myresults4.2), 7)
   
   #test that is doesn't work with missing abundance
-  expect_error(RAC_difference(bdat, abundance.var = "relative_cover",
+  expect_error(curve_difference(bdat, abundance.var = "relative_cover",
                               replicate.var = "plot",
                               species.var = "species",
                               time.var = "year"), "Abundance column contains missing values")
   
   #test that is doesn't work with a repeated species
-  expect_error(RAC_difference(bdat2, abundance.var = "relative_cover",
+  expect_error(curve_difference(bdat2, abundance.var = "relative_cover",
                               replicate.var = "plot",
                               species.var = "species",
                               time.var = "year"), "In replicate 25 there is more than one record for species at the time point 2002")
   
   #test that is doesn't work with missing species name
-  expect_error(RAC_difference(bdat3, abundance.var = "relative_cover",
+  expect_error(curve_difference(bdat3, abundance.var = "relative_cover",
                               replicate.var = "plot",
                               species.var = "species",
                               time.var = "year"), "Species names are missing")
